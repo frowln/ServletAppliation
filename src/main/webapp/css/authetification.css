@@ -1,0 +1,74 @@
+/* Фон страницы */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+body {
+    background: linear-gradient(90deg, #2196f3, #64b5f6); /* Фиолетовый градиент */
+    height: 100vh; /* Устанавливаем высоту на 100% */
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex; /* Используем Flexbox */
+    justify-content: center; /* Центрируем по горизонтали */
+    align-items: center; /* Центрируем по вертикали */
+}
+
+.content, .my-courses-section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+
+/* Окно с формой */
+.card {
+    background-color: #fff;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    width: 400px; /* Установим фиксированную ширину для формы */
+}
+
+/* Заголовок */
+h3 {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #1976d2;
+    margin-bottom: 20px;
+}
+
+/* Поля ввода */
+.form-control {
+    border-radius: 12px;
+    padding: 15px;
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    margin-bottom: 20px;
+}
+
+/* Стили для кнопки */
+.btn-primary {
+    background-color: #42a5f5;
+    border: none;
+    padding: 12px 20px;
+    font-size: 1.1rem;
+    width: 100%;
+    border-radius: 12px;
+}
+
+.btn-primary:hover {
+    background-color: #1565c0;
+}
+
+/* Стили для ссылки */
+a {
+    color: #1976d2;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}

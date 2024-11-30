@@ -1,0 +1,106 @@
+/* Общие настройки */
+body {
+    font-family: 'Segoe UI', sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #e3f2fd; /* Светлый голубой фон */
+    color: #333;
+}
+
+/* Заголовок */
+header {
+    background: linear-gradient(90deg, #2196f3, #64b5f6); /* Голубой градиент */
+    color: white;
+    padding: 20px;
+    text-align: center;
+    border-bottom: 2px solid #bbdefb; /* Дополнительный акцент */
+}
+
+/* Контейнер уроков */
+.lessons-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+/* Карточки уроков */
+.lesson-card {
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+    text-align: center;
+}
+
+.lesson-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+/* Заголовок урока */
+.lesson-card h2 {
+    font-size: 1.2rem;
+    color: #1976d2; /* Синий акцент */
+    font-weight: 600;
+    margin-bottom: 10px;
+    padding: 10px 0;
+}
+
+/* Текст описания урока */
+.lesson-card p {
+    font-size: 0.95rem;
+    color: #666;
+    padding: 0 15px;
+}
+
+/* Кнопка для урока */
+.lesson-card .btn {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 10px 20px;
+    background-color: #64b5f6;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    border: none;
+    font-weight: bold;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.lesson-card .btn:hover {
+    background-color: #42a5f5;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.lesson-card .btn:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+/* Стили для футера */
+footer {
+    background-color: #eeeeee;
+    color: #616161;
+    padding: 15px;
+    font-size: 0.9rem;
+    text-align: center;
+    position: relative;
+    width: 100%;
+    bottom: 0;
+}
+
+footer p {
+    margin: 0;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .lessons-container {
+        grid-template-columns: 1fr; /* Уроки в одну колонку на малых экранах */
+    }
+}

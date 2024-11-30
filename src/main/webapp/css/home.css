@@ -1,0 +1,164 @@
+/* Общие настройки */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+    background-color: #e3f2fd; /* Светлый голубой фон */
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Стили навигации */
+.navbar {
+    background: linear-gradient(90deg, #2196f3, #64b5f6); /* Яркий голубой градиент */
+}
+
+.navbar-brand {
+    color: #ffffff;
+    font-weight: bold;
+}
+
+.navbar-nav .nav-link {
+    color: #ffffff;
+    margin-right: 15px;
+    transition: color 0.3s;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #bbdefb; /* Светлый голубой оттенок для ховера */
+}
+
+.dropdown-menu {
+    background-color: #e3f2fd;
+}
+
+.dropdown-menu .dropdown-item:hover {
+    background-color: #bbdefb;
+}
+
+/* Контентная часть */
+.content {
+    padding: 50px 20px;
+    flex: 1;
+}
+
+.section-title {
+    color: #1976d2;
+    margin-bottom: 20px;
+    padding-left: 15px; /* Добавленный отступ для выравнивания с карточками */
+}
+
+/* Стили карточек курсов */
+.course-card-container {
+    max-width: 300px;
+    margin: 10px;
+}
+
+.course-card {
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.course-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+.course-card .card-body {
+    padding: 20px;
+}
+
+.course-card .card-title {
+    font-size: 1.2rem;
+    color: #1976d2;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.course-card .card-text {
+    font-size: 0.95rem;
+    color: #666;
+}
+
+.course-card .btn-primary {
+    background-color: #64b5f6;
+    border: none;
+    color: #ffffff;
+    transition: background-color 0.3s;
+}
+
+.course-card .btn-primary:hover {
+    background-color: #42a5f5;
+}
+
+/* Стили для футера */
+footer {
+    background-color: #eeeeee;
+    color: #616161;
+    padding: 15px;
+    font-size: 0.9rem;
+    text-align: center;
+    position: relative;
+    width: 100%;
+    bottom: 0;
+}
+
+/* Фиксируем футер внизу страницы */
+footer p {
+    margin: 0;
+}
+
+/* Медиа-запросы для адаптации */
+@media (min-width: 576px) {
+    .navbar .container-fluid {
+        max-width: 1000px;
+    }
+}
+
+@media (max-width: 768px) {
+    .course-card-container {
+        max-width: 100%;
+    }
+
+    .navbar .navbar-toggler {
+        color: #ffffff;
+    }
+}
+
+/* Кнопка добавления курса */
+/* Более специфичное правило */
+.btn-add-course {
+    background-color: #42a5f5 !important; /* Яркий синий цвет */
+    border: none !important;
+    color: white !important;
+    font-size: 1rem !important;
+    font-weight: bold !important;
+    padding: 12px 24px !important;
+    border-radius: 5px !important;
+    transition: background-color 0.3s, transform 0.3s !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1) !important;
+}
+
+
+/* Эффект при наведении на кнопку */
+.btn-add-course:hover {
+    background-color: #1565c0; /* Темнее при наведении */
+    transform: translateY(-2px); /* Легкое поднятие кнопки */
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+/* Эффект при нажатии на кнопку */
+.btn-add-course:active {
+    transform: translateY(0); /* Сглаживание при нажатии */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
