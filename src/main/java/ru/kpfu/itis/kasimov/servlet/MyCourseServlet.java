@@ -33,10 +33,9 @@ public class MyCourseServlet extends HttpServlet {
             List<Integer> enrolledCoursesId = userCourseService.getEnrolledCourseIdsByUserId(userId);
             List<Course> enrolledCourses = new ArrayList<>();
 
-            // Извлекаем информацию о каждом курсе по ID
             for (Integer courseId : enrolledCoursesId) {
                 Course course = courseService.findCourseById(courseId);
-                if (course != null) { // Добавляем только существующие курсы
+                if (course != null) {
                     enrolledCourses.add(course);
                 }
             }

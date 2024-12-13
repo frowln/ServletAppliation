@@ -40,7 +40,7 @@ public class LessonDao implements Dao<Integer, Lesson> {
             """;
 
     public static final String FIND_BY_COURSE_ID_SQL = """
-            SELECT id, name, body
+            SELECT id, name, body, course_id
             FROM lessons
             WHERE course_id = ?
             """;

@@ -19,4 +19,18 @@ public class LessonService {
     public Optional<Lesson> findLessonById(Integer lessonId) {
         return lessonDao.findById(lessonId);
     }
+
+    public void saveLesson(Lesson lesson) {
+        lessonDao.save(lesson);
+    }
+
+    public boolean deleteLesson(Integer lessonId) {
+        return lessonDao.delete(lessonId);
+    }
+
+    public boolean updateLesson(Lesson lesson) {
+        return lessonDao.update(lesson);
+    }
+
+
 }

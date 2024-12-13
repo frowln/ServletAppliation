@@ -22,7 +22,7 @@ public class LessonsServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String courseIdParam = req.getParameter("id");
 
-        // Проверяем, что параметр "id" не null и является числом
+        // Проверяем, что параметр "id" корректен
         if (courseIdParam == null || courseIdParam.isEmpty()) {
             resp.sendRedirect("/home?error=invalid_course");
             return;

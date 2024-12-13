@@ -45,6 +45,11 @@ public class UserCourseDao implements Dao<UserCourseKey, UserCourse> {
             WHERE user_id = ? AND course_id = ?
             """;
 
+    private static final String USERS_BY_COURSE_ID_SQL = """
+            SELECT user_id FROM user_courses
+            WHERE course_id = ?
+            """;
+
     private static final String USERSCOURSES_SQL = """
     SELECT user_id, course_id
     FROM user_courses
@@ -171,10 +176,29 @@ public class UserCourseDao implements Dao<UserCourseKey, UserCourse> {
         }
     }
 
+    public List<Integer> getStudentsByCourseId(int courseId) {
+        try (Connection connection = ConnectionManager.get();
+             PreparedStatement statement = connection.prepareStatement(USERS_BY_COURSE_ID_SQL)) {
+            statement.setInt(1, courseId);
+
+            List<Integer> studentIds = new ArrayList<>();
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                studentIds.add(resultSet.getInt("user_id")); // Исправлено: получаем user_id
+            }
+            return studentIds;
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+    }
+
     @Override
     public boolean update(UserCourse userCourse) {
         throw new UnsupportedOperationException("Update is not supported for UserCourse entity.");
     }
+
+
 
     private UserCourseDao() {}
 }

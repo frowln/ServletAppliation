@@ -37,6 +37,12 @@ public class UserService {
         return userDao.update(user);
     }
 
+    public Optional<User>  findById(Integer id) {
+        Optional<User> user = userDao.findById(id);
+
+        return user;
+    }
+
 
 
 }

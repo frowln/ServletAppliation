@@ -86,7 +86,7 @@
               <div class="card-body">
                 <h5 class="card-title">${course.name}</h5>
                 <p class="card-text">${course.description}</p>
-                <a href="/manageCourse.jsp?courseId=${course.id}" class="btn btn-secondary">Управление</a>
+                <a href="/manageCourse?id=${course.id}" class="btn btn-secondary">Управление</a>
               </div>
             </div>
           </div>

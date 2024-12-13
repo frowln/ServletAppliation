@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <!DOCTYPE html>
@@ -6,11 +6,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${lesson.name}</title>
+  <title>Редактировать курс</title>
   <link href="/css/home.css" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css2?family=Segoe+UI&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
+
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
   <div class="container-fluid">
     <a class="navbar-brand" href="#">Образовательная Платформа</a>
@@ -34,12 +36,25 @@
 </nav>
 
 <div class="container mt-5">
-  <h1>${lesson.name}</h1>
-  <hr>
-  <div class="lesson-content">
-    <p>${lesson.body}</p>
-  </div>
-  <a href="/course?id=${lesson.courseId}" class="btn btn-secondary mt-3">Назад к курсу</a>
+  <h2 class="mb-4">Редактировать курс</h2>
+
+  <c:if test="${not empty error}">
+    <div class="alert alert-danger">${error}</div>
+  </c:if>
+
+  <form action="/editCourse" method="post">
+    <input type="hidden" name="id" value="${course.id}">
+    <div class="mb-3">
+      <label for="name" class="form-label">Название курса</label>
+      <input type="text" class="form-control" id="name" name="name" value="${course.name}" required>
+    </div>
+    <div class="mb-3">
+      <label for="description" class="form-label">Описание курса</label>
+      <textarea class="form-control" id="description" name="description" rows="5" required>${course.description}</textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+    <a href="/manageCourse?id=${course.id}" class="btn btn-secondary">Отмена</a>
+  </form>
 </div>
 
 <footer class="text-center mt-5 py-3 bg-light">

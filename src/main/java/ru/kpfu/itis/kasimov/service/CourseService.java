@@ -29,5 +29,13 @@ public class CourseService {
         return courseDao.findById(id).orElse(null);
     }
 
+    public boolean deleteCourseById(Integer id) {
+        return courseDao.delete(id);
+    }
+
+    public boolean updateCourse(Course course) {
+        return courseDao.update(course);
+    }
+
 
 }
