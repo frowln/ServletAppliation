@@ -46,7 +46,7 @@ public class UserDao implements Dao<Integer, User> {
 
     @Override
     public boolean update(User user) {
-        try (Connection connection = ConnectionManager.get();
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement statement = connection.prepareStatement(UPDATE_SQL)) {
             statement.setString(1, user.getName());
             statement.setString(2, user.getEmail());
@@ -69,7 +69,7 @@ public class UserDao implements Dao<Integer, User> {
 
     @Override
     public List<User> findAll() {
-        try (Connection connection = ConnectionManager.get();
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_ALL_SQL)) {
             List<User> users = new ArrayList<>();
 
@@ -87,7 +87,7 @@ public class UserDao implements Dao<Integer, User> {
 
     @Override
     public Optional<User> findById(Integer id) {
-        try (Connection connection = ConnectionManager.get();
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_BY_ID_SQL)) {
             statement.setInt(1, id);
 
@@ -115,7 +115,7 @@ public class UserDao implements Dao<Integer, User> {
 
     @Override
     public User save(User user) {
-        try (Connection connection = ConnectionManager.get();
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement statement = connection.prepareStatement(SAVE_SQL, Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, user.getName());
             statement.setString(2, user.getEmail());
@@ -138,7 +138,7 @@ public class UserDao implements Dao<Integer, User> {
 
     @Override
     public boolean delete(Integer id) {
-        try (Connection connection = ConnectionManager.get();
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement statement = connection.prepareStatement(DELETE_SQL)) {
             statement.setInt(1, id);
 
@@ -149,7 +149,7 @@ public class UserDao implements Dao<Integer, User> {
     }
 
     public Optional<User> findByEmail(String email) {
-        try (Connection connection = ConnectionManager.get();
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_BY_EMAIL_SQL)) {
             statement.setString(1, email);
 

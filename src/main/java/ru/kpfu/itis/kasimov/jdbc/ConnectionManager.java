@@ -1,79 +1,50 @@
 package ru.kpfu.itis.kasimov.jdbc;
 
-import java.lang.reflect.Proxy;
+import java.io.InputStream;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
+import java.util.Properties;
+import javax.sql.DataSource;
+import org.postgresql.ds.PGSimpleDataSource;
 
-public final class ConnectionManager {
-    private static BlockingQueue<Connection> pool;
-    private static final int DEFAULT_POOL_SIZE = 10;
+public class ConnectionManager {
+    private static DataSource dataSource;
 
     static {
-        loadDriver();
-        initConnectionPool();
-    }
-
-    private static void loadDriver() {
         try {
-            Class.forName("org.postgresql.Driver");
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
+            Properties baseProperties = new Properties();
+            try (InputStream baseInput = ConnectionManager.class.getClassLoader().getResourceAsStream("application.properties")) {
+                if (baseInput == null) {
+                    throw new RuntimeException("Base configuration file not found: application.properties");
+                }
+                baseProperties.load(baseInput);
+            }
+
+            String activeProfile = baseProperties.getProperty("active.profile", "dev");
+            String profileFile = "application-" + activeProfile + ".properties";
+
+            Properties profileProperties = new Properties();
+            try (InputStream profileInput = ConnectionManager.class.getClassLoader().getResourceAsStream(profileFile)) {
+                if (profileInput == null) {
+                    throw new RuntimeException("Profile configuration file not found: " + profileFile);
+                }
+                profileProperties.load(profileInput);
+            }
+
+            PGSimpleDataSource ds = new PGSimpleDataSource();
+            ds.setURL(profileProperties.getProperty("database.url"));
+            ds.setUser(profileProperties.getProperty("database.username"));
+            ds.setPassword(profileProperties.getProperty("database.password"));
+
+            dataSource = ds;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to load database configuration.");
         }
     }
 
-    private static void initConnectionPool() {
-        int size = DEFAULT_POOL_SIZE;
-        pool = new ArrayBlockingQueue<>(size);
-
-        for (int i = 0; i < size; i++) {
-            Connection connection = open();
-            var proxyConnection = (Connection) Proxy.newProxyInstance(
-                    ConnectionManager.class.getClassLoader(),
-                    new Class[]{Connection.class},
-                    (proxy, method, args) -> method.getName().equals("close") ?
-                            pool.add((Connection) proxy) :
-                            method.invoke(connection, args)
-            );
-            pool.add(proxyConnection);
-        }
-    }
-
-    public static Connection get() {
-        try {
-            return pool.take();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private static Connection open() {
-        String PROD_DB_HOST = System.getenv("PROD_DB_HOST");
-        String PROD_DB_PORT = System.getenv("PROD_DB_PORT");
-        String PROD_DB_PASSWORD = System.getenv("PROD_DB_PASSWORD");
-        String PROD_DB_NAME = System.getenv("PROD_DB_NAME");
-        String PROD_DB_USERNAME = System.getenv("PROD_DB_USERNAME");
-
-        System.out.println("PROD_DB_HOST: " + PROD_DB_HOST);
-        System.out.println("PROD_DB_PORT: " + PROD_DB_PORT);
-        System.out.println("PROD_DB_NAME: " + PROD_DB_NAME);
-        System.out.println("PROD_DB_USERNAME: " + PROD_DB_USERNAME);
-        System.out.println("PROD_DB_PASSWORD: " + PROD_DB_PASSWORD);
-
-        try {
-            Connection connection = DriverManager.getConnection(
-                    String.format("jdbc:postgresql://%s:%s/%s", PROD_DB_HOST, PROD_DB_PORT, PROD_DB_NAME),
-                    PROD_DB_USERNAME,
-                    PROD_DB_PASSWORD
-            );
-            return connection;
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to establish a connection to the database", e);
-        }
-    }
-
-    private ConnectionManager() {
+    public static Connection getConnection() throws SQLException {
+        return dataSource.getConnection();
     }
 }

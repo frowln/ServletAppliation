@@ -56,7 +56,7 @@ public class CourseDao implements Dao<Integer, Course> {
 
 
     public List<Course> findByName(String query) {
-        try (Connection connection = ConnectionManager.get();
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_BY_NAME_SQL)) {
             statement.setString(1, "%" + query + "%");
             List<Course> courses = new ArrayList<>();
@@ -77,7 +77,7 @@ public class CourseDao implements Dao<Integer, Course> {
 
     @Override
     public boolean update(Course course) {
-        try (Connection connection = ConnectionManager.get();
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement statement = connection.prepareStatement(UPDATE_SQL)) {
             statement.setString(1, course.getName());
             statement.setString(2, course.getDescription());
@@ -92,7 +92,7 @@ public class CourseDao implements Dao<Integer, Course> {
 
     @Override
     public List<Course> findAll() {
-        try (Connection connection = ConnectionManager.get();
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_ALL_SQL)) {
             List<Course> courses = new ArrayList<>();
 
@@ -110,7 +110,7 @@ public class CourseDao implements Dao<Integer, Course> {
 
     @Override
     public Optional<Course> findById(Integer id) {
-        try (Connection connection = ConnectionManager.get();
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_BY_ID_SQL)) {
             statement.setInt(1, id);
 
@@ -137,7 +137,7 @@ public class CourseDao implements Dao<Integer, Course> {
 
     @Override
     public Course save(Course course) {
-        try (Connection connection = ConnectionManager.get();
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement statement = connection.prepareStatement(SAVE_SQL, Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, course.getName());
             statement.setString(2, course.getDescription());
@@ -157,7 +157,7 @@ public class CourseDao implements Dao<Integer, Course> {
 
     @Override
     public boolean delete(Integer id) {
-        try (Connection connection = ConnectionManager.get();
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement statement = connection.prepareStatement(DELETE_SQL)) {
             statement.setInt(1, id);
 
@@ -168,7 +168,7 @@ public class CourseDao implements Dao<Integer, Course> {
     }
 
     public List<Course> findByTeacherId(Integer id) {
-        try (Connection connection = ConnectionManager.get();
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_BY_TEACHER_ID_SQL)) {
             statement.setInt(1, id);
             List<Course> courses = new ArrayList<>();

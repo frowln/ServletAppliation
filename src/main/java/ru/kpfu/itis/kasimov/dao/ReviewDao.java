@@ -30,7 +30,7 @@ public class ReviewDao {
             """;
 
     public void saveReview(Review review) {
-        try (Connection connection = ConnectionManager.get();
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement statement = connection.prepareStatement(SAVE_SQL, PreparedStatement.RETURN_GENERATED_KEYS)) {
 
             statement.setInt(1, review.getCourseId());
@@ -54,7 +54,7 @@ public class ReviewDao {
 
     public List<Review> findReviewsByCourseId(int courseId) {
         List<Review> reviews = new ArrayList<>();
-        try (Connection connection = ConnectionManager.get();
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_BY_COURSE_SQL)) {
             statement.setInt(1, courseId);
             try (ResultSet resultSet = statement.executeQuery()) {

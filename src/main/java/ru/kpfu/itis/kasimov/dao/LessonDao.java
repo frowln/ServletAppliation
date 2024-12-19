@@ -47,7 +47,7 @@ public class LessonDao implements Dao<Integer, Lesson> {
 
     @Override
     public boolean update(Lesson lesson) {
-        try (Connection connection = ConnectionManager.get();
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement statement = connection.prepareStatement(UPDATE_SQL)) {
             statement.setString(1, lesson.getName());
             statement.setString(2, lesson.getBody());
@@ -62,7 +62,7 @@ public class LessonDao implements Dao<Integer, Lesson> {
 
     @Override
     public List<Lesson> findAll() {
-        try (Connection connection = ConnectionManager.get();
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_ALL_SQL)) {
             List<Lesson> lessons = new ArrayList<>();
 
@@ -80,7 +80,7 @@ public class LessonDao implements Dao<Integer, Lesson> {
 
     @Override
     public Optional<Lesson> findById(Integer id) {
-        try (Connection connection = ConnectionManager.get();
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_BY_ID_SQL)) {
             statement.setInt(1, id);
             try (ResultSet resultSet = statement.executeQuery()) {
@@ -103,7 +103,7 @@ public class LessonDao implements Dao<Integer, Lesson> {
 
     @Override
     public Lesson save(Lesson lesson) {
-        try (Connection connection = ConnectionManager.get();
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement statement = connection.prepareStatement(SAVE_SQL, Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, lesson.getName());
             statement.setString(2, lesson.getBody());
@@ -123,7 +123,7 @@ public class LessonDao implements Dao<Integer, Lesson> {
 
     @Override
     public boolean delete(Integer id) {
-        try (Connection connection = ConnectionManager.get();
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement statement = connection.prepareStatement(DELETE_SQL)) {
             statement.setInt(1, id);
 
@@ -137,7 +137,7 @@ public class LessonDao implements Dao<Integer, Lesson> {
     }
 
     public List<Lesson> findByCourseId(Integer courseId) {
-        try (Connection connection = ConnectionManager.get();
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_BY_COURSE_ID_SQL)) {
             statement.setInt(1, courseId);
 

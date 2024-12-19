@@ -47,7 +47,7 @@ public class ProgressDao {
                     WHERE user_id = ? AND lesson_id = ?;
                 """;
 
-        try (Connection connection = ConnectionManager.get();
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, userId);
             statement.setInt(2, lessonId);
@@ -66,7 +66,7 @@ public class ProgressDao {
 
 
     public void markLessonAsCompleted(int userId, int lessonId, int courseId) {
-        try (Connection connection = ConnectionManager.get();
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement statement = connection.prepareStatement(MARK_LESSON_COMPLETED_SQL)) {
             statement.setInt(1, userId);
             statement.setInt(2, lessonId);
@@ -98,7 +98,7 @@ public class ProgressDao {
                         last_updated = NOW();
                 """;
 
-        try (Connection connection = ConnectionManager.get();
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement statement = connection.prepareStatement(insertOrUpdateSQL)) {
             statement.setInt(1, userId);
             statement.setInt(2, courseId);
@@ -113,7 +113,7 @@ public class ProgressDao {
 
 
     public Optional<UserProgress> getUserProgress(int userId, int courseId) {
-        try (Connection connection = ConnectionManager.get();
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement statement = connection.prepareStatement(GET_USER_PROGRESS_SQL)) {
             statement.setInt(1, userId);
             statement.setInt(2, courseId);

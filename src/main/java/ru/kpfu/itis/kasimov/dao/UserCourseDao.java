@@ -74,7 +74,7 @@ public class UserCourseDao implements Dao<UserCourseKey, UserCourse> {
             """;
 
     public void removeUserFromCourse(int userId, int courseId) {
-        try (Connection connection = ConnectionManager.get();
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement statement = connection.prepareStatement(REMOVE_FROM_COURSE_SQL)) {
             statement.setInt(1, userId);
             statement.setInt(2, courseId);
@@ -86,7 +86,7 @@ public class UserCourseDao implements Dao<UserCourseKey, UserCourse> {
 
 
     public int getEnrolledStudentsCount(int courseId) {
-        try (Connection connection = ConnectionManager.get();
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement statement = connection.prepareStatement(COUNT_ENROLLED_STUDENTS_SQL)) {
             statement.setInt(1, courseId);
             try (ResultSet resultSet = statement.executeQuery()) {
@@ -103,7 +103,7 @@ public class UserCourseDao implements Dao<UserCourseKey, UserCourse> {
 
     @Override
     public UserCourse save(UserCourse userCourse) {
-        try (Connection connection = ConnectionManager.get();
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement statement = connection.prepareStatement(SAVE_SQL)) {
             statement.setInt(1, userCourse.getId().getUserId());
             statement.setInt(2, userCourse.getId().getCourseId());
@@ -117,7 +117,7 @@ public class UserCourseDao implements Dao<UserCourseKey, UserCourse> {
 
     @Override
     public Optional<UserCourse> findById(UserCourseKey id) {
-        try (Connection connection = ConnectionManager.get();
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_BY_ID_SQL)) {
             statement.setInt(1, id.getUserId());
             statement.setInt(2, id.getCourseId());
@@ -139,7 +139,7 @@ public class UserCourseDao implements Dao<UserCourseKey, UserCourse> {
 
     @Override
     public List<UserCourse> findAll() {
-        try (Connection connection = ConnectionManager.get();
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_ALL_SQL)) {
             List<UserCourse> userCourses = new ArrayList<>();
 
@@ -160,7 +160,7 @@ public class UserCourseDao implements Dao<UserCourseKey, UserCourse> {
 
     @Override
     public boolean delete(UserCourseKey id) {
-        try (Connection connection = ConnectionManager.get();
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement statement = connection.prepareStatement(DELETE_SQL)) {
             statement.setInt(1, id.getUserId());
             statement.setInt(2, id.getCourseId());
@@ -172,7 +172,7 @@ public class UserCourseDao implements Dao<UserCourseKey, UserCourse> {
     }
 
     public void insertUserCourse(int user_id, int course_id) {
-        try (Connection connection = ConnectionManager.get();
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement statement = connection.prepareStatement(INSERT_INTO_SQL)) {
             statement.setInt(1, user_id);
             statement.setInt(2, course_id);
@@ -183,7 +183,7 @@ public class UserCourseDao implements Dao<UserCourseKey, UserCourse> {
     }
 
     public boolean isUserEnrolledInCourse(int userId, int courseId) throws SQLException {
-        try (Connection connection = ConnectionManager.get();
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement statement = connection.prepareStatement(USER_IN_COURSE_SQL)) {
             statement.setInt(1, userId);
             statement.setInt(2, courseId);
@@ -199,7 +199,7 @@ public class UserCourseDao implements Dao<UserCourseKey, UserCourse> {
 
 
     public List<Integer> getEnrolledCourseIdsByUserId(int userId) {
-        try (Connection connection = ConnectionManager.get();
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement statement = connection.prepareStatement(USERSCOURSES_INTEGER_SQL)) {
             statement.setInt(1, userId);
 
@@ -216,7 +216,7 @@ public class UserCourseDao implements Dao<UserCourseKey, UserCourse> {
     }
 
     public List<Integer> getStudentsByCourseId(int courseId) {
-        try (Connection connection = ConnectionManager.get();
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement statement = connection.prepareStatement(USERS_BY_COURSE_ID_SQL)) {
             statement.setInt(1, courseId);
 
