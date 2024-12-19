@@ -7,7 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.logging.Logger;
 
-@WebFilter("/*") // Фильтр на все запросы
+@WebFilter("/*")
 public class LoggingFilter implements Filter {
     private static final Logger logger = Logger.getLogger(LoggingFilter.class.getName());
 
@@ -20,6 +20,6 @@ public class LoggingFilter implements Filter {
 
         logger.info("Request: " + method + " " + uri);
 
-        chain.doFilter(request, response); // Продолжить выполнение запроса
+        chain.doFilter(request, response);
     }
 }

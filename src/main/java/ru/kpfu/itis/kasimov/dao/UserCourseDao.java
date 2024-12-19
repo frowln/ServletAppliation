@@ -51,16 +51,55 @@ public class UserCourseDao implements Dao<UserCourseKey, UserCourse> {
             """;
 
     private static final String USERSCOURSES_SQL = """
-    SELECT user_id, course_id
-    FROM user_courses
-    WHERE user_id = ?
-    """;
+            SELECT user_id, course_id
+            FROM user_courses
+            WHERE user_id = ?
+            """;
 
     private static final String USERSCOURSES_INTEGER_SQL = """
             SELECT course_id 
             FROM user_courses 
             WHERE user_id = ?
             """;
+
+    private static final String COUNT_ENROLLED_STUDENTS_SQL = """
+                SELECT COUNT(*)
+                FROM user_courses
+                WHERE course_id = ?
+            """;
+
+    private static final String REMOVE_FROM_COURSE_SQL = """
+                DELETE FROM user_courses 
+                WHERE user_id = ? AND course_id = ?
+            """;
+
+    public void removeUserFromCourse(int userId, int courseId) {
+        try (Connection connection = ConnectionManager.get();
+             PreparedStatement statement = connection.prepareStatement(REMOVE_FROM_COURSE_SQL)) {
+            statement.setInt(1, userId);
+            statement.setInt(2, courseId);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+    }
+
+
+    public int getEnrolledStudentsCount(int courseId) {
+        try (Connection connection = ConnectionManager.get();
+             PreparedStatement statement = connection.prepareStatement(COUNT_ENROLLED_STUDENTS_SQL)) {
+            statement.setInt(1, courseId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+        return 0;
+    }
+
 
     @Override
     public UserCourse save(UserCourse userCourse) {
@@ -134,7 +173,7 @@ public class UserCourseDao implements Dao<UserCourseKey, UserCourse> {
 
     public void insertUserCourse(int user_id, int course_id) {
         try (Connection connection = ConnectionManager.get();
-            PreparedStatement statement= connection.prepareStatement(INSERT_INTO_SQL)) {
+             PreparedStatement statement = connection.prepareStatement(INSERT_INTO_SQL)) {
             statement.setInt(1, user_id);
             statement.setInt(2, course_id);
             statement.executeUpdate();
@@ -199,7 +238,7 @@ public class UserCourseDao implements Dao<UserCourseKey, UserCourse> {
     }
 
 
-
-    private UserCourseDao() {}
+    private UserCourseDao() {
+    }
 }
 

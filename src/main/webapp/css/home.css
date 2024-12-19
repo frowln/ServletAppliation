@@ -1,164 +1,396 @@
-/* Общие настройки */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --primary-color: #0ea5e9;
+    --primary-dark: #0369a1;
+    --primary-light: #38bdf8;
+    --secondary-color: #f1f5f9;
+    --text-primary: #1e293b;
+    --text-secondary: #64748b;
+    --background-light: #f8fafc;
+    --shadow-color: rgba(14, 165, 233, 0.1);
+    --primary-gradient: linear-gradient(135deg, #0ea5e9 0%, #0369a1 100%);
+    --success-color: #16a34a;
+    --danger-color: #dc2626;
+    --nav-bg: rgba(255, 255, 255, 0.95);
+    --card-bg: rgba(255, 255, 255, 1);
+    --glass-border: rgba(203, 213, 225, 0.4);
+    --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+    --card-border: #e2e8f0;
+}
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI', sans-serif;
 }
 
 body {
-    background-color: #e3f2fd; /* Светлый голубой фон */
-    color: #333;
-    display: flex;
-    flex-direction: column;
+    font-family: 'Outfit', sans-serif;
     min-height: 100vh;
+    background: var(--background-light);
+    color: var(--text-primary);
+    position: relative;
+    overflow-x: hidden;
 }
 
-/* Стили навигации */
+body::before,
+body::after {
+    content: '';
+    position: fixed;
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0.4;
+    z-index: -1;
+}
+
+body::before {
+    background: #93c5fd;
+    top: -200px;
+    left: -200px;
+    animation: float 20s infinite;
+}
+
+body::after {
+    background: #60a5fa;
+    bottom: -200px;
+    right: -200px;
+    animation: float 20s infinite reverse;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translate(0, 0) scale(1);
+    }
+    50% {
+        transform: translate(50px, 50px) scale(1.1);
+    }
+}
+
 .navbar {
-    background: linear-gradient(90deg, #2196f3, #64b5f6); /* Яркий голубой градиент */
+    background: var(--nav-bg);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-bottom: 1px solid var(--glass-border);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
+    padding: 0.5rem 1rem;
+    height: 64px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.navbar > .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.navbar-collapse {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.navbar-nav {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    height: 100%;
+    margin: 0;
+}
+
+.nav-item {
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.nav-link {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0 1rem !important;
+    color: var(--text-secondary) !important;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+    margin: 0 0.2rem;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    color: var(--primary-color) !important;
+    background-color: var(--secondary-color);
 }
 
 .navbar-brand {
-    color: #ffffff;
-    font-weight: bold;
+    color: var(--primary-color) !important;
+    font-weight: 700;
+    font-size: 1.5rem;
+    text-decoration: none;
+    background: none !important;
+    -webkit-background-clip: unset !important;
+    -webkit-text-fill-color: unset !important;
 }
 
-.navbar-nav .nav-link {
-    color: #ffffff;
-    margin-right: 15px;
-    transition: color 0.3s;
+.navbar-brand i {
+    color: var(--primary-light);
 }
 
-.navbar-nav .nav-link:hover {
-    color: #bbdefb; /* Светлый голубой оттенок для ховера */
+.user-avatar {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--primary-light);
 }
 
-.dropdown-menu {
-    background-color: #e3f2fd;
+.main-content {
+    padding: 2rem 0;
 }
 
-.dropdown-menu .dropdown-item:hover {
-    background-color: #bbdefb;
+h2 {
+    color: var(--primary-dark);
+    font-weight: 700;
+    margin-bottom: 1rem;
 }
 
-/* Контентная часть */
-.content {
-    padding: 50px 20px;
-    flex: 1;
+.subtitle {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
 }
 
-.section-title {
-    color: #1976d2;
-    margin-bottom: 20px;
-    padding-left: 15px; /* Добавленный отступ для выравнивания с карточками */
+.search-bar {
+    width: 100%;
+    margin-bottom: 2rem;
 }
 
-/* Стили карточек курсов */
-.course-card-container {
-    max-width: 300px;
-    margin: 10px;
+.search-bar .input-group {
+    width: 100%;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px var(--shadow-color);
+    padding: 0.5rem;
+}
+
+.search-bar input {
+    border: none;
+    font-size: 1.1rem;
+    padding: 0.8rem 1rem;
+    background: transparent;
+}
+
+.search-bar input:focus {
+    box-shadow: none;
+    background: transparent;
+}
+
+.search-bar .btn-primary {
+    background-color: var(--primary-color);
+    border: none;
+    padding: 0.8rem 2.5rem;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    margin-left: 0.5rem;
+}
+
+.search-bar .btn-primary:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-1px);
 }
 
 .course-card {
-    background-color: #ffffff;
-    border: 1px solid #e0e0e0;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    transition: transform 0.3s, box-shadow 0.3s;
+    background: white;
+    border-radius: 16px;
+    border: none;
+    box-shadow: 0 4px 20px var(--shadow-color);
+    transition: all 0.3s ease;
+    height: 100%;
 }
 
 .course-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 8px 25px var(--shadow-color);
 }
 
 .course-card .card-body {
-    padding: 20px;
+    padding: 1.5rem;
 }
 
-.course-card .card-title {
-    font-size: 1.2rem;
-    color: #1976d2;
+.card-title {
+    color: var(--primary-dark);
     font-weight: 600;
-    margin-bottom: 10px;
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
 }
 
-.course-card .card-text {
-    font-size: 0.95rem;
-    color: #666;
+.card-text {
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
 }
 
-.course-card .btn-primary {
-    background-color: #64b5f6;
-    border: none;
-    color: #ffffff;
-    transition: background-color 0.3s;
+.rating {
+    color: #E5E7EB;
+    display: flex;
+    align-items: center;
+    margin-left: -2px;
 }
 
-.course-card .btn-primary:hover {
-    background-color: #42a5f5;
+.rating .fa-star {
+    margin-right: 2px;
+    color: #E5E7EB;
 }
 
-/* Стили для футера */
-footer {
-    background-color: #eeeeee;
-    color: #616161;
-    padding: 15px;
-    font-size: 0.9rem;
-    text-align: center;
-    position: relative;
-    width: 100%;
-    bottom: 0;
+.rating .fa-star.active {
+    color: #FFD700;
 }
 
-/* Фиксируем футер внизу страницы */
-footer p {
-    margin: 0;
+.rating-text {
+    color: var(--text-secondary);
+    margin-left: 0.5rem;
 }
 
-/* Медиа-запросы для адаптации */
-@media (min-width: 576px) {
-    .navbar .container-fluid {
-        max-width: 1000px;
-    }
-}
-
-@media (max-width: 768px) {
-    .course-card-container {
-        max-width: 100%;
-    }
-
-    .navbar .navbar-toggler {
-        color: #ffffff;
-    }
-}
-
-/* Кнопка добавления курса */
-/* Более специфичное правило */
 .btn-add-course {
-    background-color: #42a5f5 !important; /* Яркий синий цвет */
-    border: none !important;
-    color: white !important;
-    font-size: 1rem !important;
-    font-weight: bold !important;
-    padding: 12px 24px !important;
-    border-radius: 5px !important;
-    transition: background-color 0.3s, transform 0.3s !important;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1) !important;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 8px;
+    padding: 0.7rem 1.5rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
 }
 
-
-/* Эффект при наведении на кнопку */
 .btn-add-course:hover {
-    background-color: #1565c0; /* Темнее при наведении */
-    transform: translateY(-2px); /* Легкое поднятие кнопки */
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    background-color: var(--primary-dark);
+    color: white;
+    transform: translateY(-2px);
 }
 
-/* Эффект при нажатии на кнопку */
-.btn-add-course:active {
-    transform: translateY(0); /* Сглаживание при нажатии */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+.btn-enrolled {
+    background-color: var(--secondary-color);
+    color: var(--primary-color);
+    border: none;
+    font-weight: 500;
 }
+
+.card-footer {
+    padding: 1rem 1.5rem;
+    background: transparent;
+    border-top: 1px solid var(--card-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.course-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.dropdown-menu {
+    background: var(--nav-bg);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    box-shadow: var(--shadow-md);
+    padding: 0.5rem;
+}
+
+.dropdown-item {
+    color: var(--text-secondary);
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.dropdown-item i {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    transition: all 0.3s ease;
+}
+
+.dropdown-item:hover {
+    background: var(--secondary-color);
+    color: var(--primary-color);
+}
+
+.dropdown-item:hover i {
+    color: var(--primary-color);
+}
+
+.dropdown-divider {
+    border-color: var(--secondary-color);
+    margin: 0.5rem 0;
+}
+
+.content {
+    padding: 3rem 0;
+    background: linear-gradient(180deg, rgba(56, 189, 248, 0.05) 0%, rgba(255, 255, 255, 0) 100%);
+    min-height: calc(100vh - 64px);
+}
+
+.text-center.mb-4 {
+    color: var(--primary-color) !important;
+    font-weight: 700;
+    font-size: 2rem;
+    margin-bottom: 2rem !important;
+    background: none !important;
+    -webkit-background-clip: unset !important;
+    -webkit-text-fill-color: unset !important;
+}
+
+.search-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.courses-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2rem;
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--background-light);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary-light);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-color);
+}
+
+

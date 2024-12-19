@@ -53,4 +53,12 @@ public class UserCourseService {
         UserCourseKey key = new UserCourseKey(userId, courseId);
         return userCourseDao.delete(key);
     }
+
+    public int getEnrolledStudentsCount(int courseId) {
+        return userCourseDao.getEnrolledStudentsCount(courseId);
+    }
+
+    public void removeUserFromCourse(int userId, int courseId) {
+        userCourseDao.removeUserFromCourse(userId, courseId);
+    }
 }

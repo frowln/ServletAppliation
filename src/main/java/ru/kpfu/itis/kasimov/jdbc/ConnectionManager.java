@@ -39,7 +39,7 @@ public final class ConnectionManager {
                     new Class[]{Connection.class},
                     (proxy, method, args) -> method.getName().equals("close") ?
                             pool.add((Connection) proxy) :
-                                method.invoke(connection, args));
+                            method.invoke(connection, args));
             pool.add(proxyConnection);
         }
     }

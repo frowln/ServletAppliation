@@ -10,6 +10,7 @@ import ru.kpfu.itis.kasimov.service.UserService;
 
 import java.io.IOException;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {

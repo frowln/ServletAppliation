@@ -5,46 +5,55 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import ru.kpfu.itis.kasimov.entity.Course;
-import ru.kpfu.itis.kasimov.entity.Lesson;
-import ru.kpfu.itis.kasimov.service.CourseService;
-import ru.kpfu.itis.kasimov.service.LessonService;
+import ru.kpfu.itis.kasimov.entity.*;
+import ru.kpfu.itis.kasimov.service.*;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @WebServlet("/course")
 public class LessonsServlet extends HttpServlet {
     private final CourseService courseService = CourseService.getINSTANCE();
     private final LessonService lessonService = LessonService.getINSTANCE();
+    private final ReviewService reviewService = ReviewService.getINSTANCE();
+    private final UserCourseService userCourseService = UserCourseService.getINSTANCE();
+    private final ProgressService progressService = ProgressService.getINSTANCE();
+    private final UserService userService = UserService.getINSTANCE();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String courseIdParam = req.getParameter("id");
+        int courseId = Integer.parseInt(req.getParameter("id"));
+        User user = (User) req.getSession().getAttribute("user");
+        Integer userId = (Integer) req.getSession().getAttribute("userId");
 
-        // Проверяем, что параметр "id" корректен
-        if (courseIdParam == null || courseIdParam.isEmpty()) {
-            resp.sendRedirect("/home?error=invalid_course");
-            return;
+        Course course = courseService.findCourseById(courseId);
+        List<Lesson> lessons = lessonService.findLessonsByCourseId(courseId);
+        List<Review> reviews = reviewService.getReviewsByCourseId(courseId);
+
+        Optional<User> teacherOptional = userService.findById(course.getTeacherId());
+        User teacher = teacherOptional.orElse(null);
+
+        boolean enrolled = false;
+        Optional<UserProgress> progressOpt = Optional.empty();
+
+        if (userId != null) {
+            enrolled = userCourseService.isUserEnrolledInCourse(userId, courseId);
+            progressOpt = progressService.getProgress(userId, courseId);
         }
+        progressOpt.ifPresent(progress -> req.setAttribute("progress", progress));
+        int enrolledStudents = userCourseService.getEnrolledStudentsCount(courseId);
+        req.setAttribute("course", course);
+        req.setAttribute("lessons", lessons);
+        req.setAttribute("reviews", reviews);
+        req.setAttribute("user", user);
+        req.setAttribute("enrolled", enrolled);
+        req.setAttribute("teacher", teacher);
+        req.setAttribute("enrolledStudents", enrolledStudents);
 
-        try {
-            int courseId = Integer.parseInt(courseIdParam); // Парсим ID курса
-            Course course = courseService.findCourseById(courseId);
-
-            if (course == null) {
-                resp.sendRedirect("/home?error=course_not_found");
-                return;
-            }
-
-            List<Lesson> lessons = lessonService.findLessonsByCourseId(courseId);
-
-            req.setAttribute("course", course);
-            req.setAttribute("lessons", lessons);
-            req.getRequestDispatcher("/WEB-INF/views/course.jsp").forward(req, resp);
-
-        } catch (NumberFormatException e) {
-            resp.sendRedirect("/home?error=invalid_course_id");
-        }
+        req.getRequestDispatcher("/WEB-INF/views/course.jsp").forward(req, resp);
     }
+
 }
+
+

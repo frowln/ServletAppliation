@@ -3,14 +3,18 @@ package ru.kpfu.itis.kasimov.service;
 import lombok.Getter;
 import ru.kpfu.itis.kasimov.dao.UserDao;
 import ru.kpfu.itis.kasimov.entity.User;
+import ru.kpfu.itis.kasimov.servlet.UploadFileServlet;
 
 import java.util.Optional;
+import java.util.logging.Logger;
 
 public class UserService {
     private static UserDao userDao = UserDao.getINSTANCE();
     @Getter
     public static final UserService INSTANCE = new UserService();
-    private UserService() {}
+
+    private UserService() {
+    }
 
     public Optional<User> login(String email, String password) {
         Optional<User> user = userDao.findByEmail(email);
@@ -20,9 +24,9 @@ public class UserService {
 
     public Optional<User> findByEmail(String email) {
         Optional<User> user = userDao.findByEmail(email);
-
         return user;
     }
+
 
     public Optional<User> register(User user) {
         try {
@@ -37,12 +41,11 @@ public class UserService {
         return userDao.update(user);
     }
 
-    public Optional<User>  findById(Integer id) {
+    public Optional<User> findById(Integer id) {
         Optional<User> user = userDao.findById(id);
 
         return user;
     }
-
 
 
 }

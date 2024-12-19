@@ -29,7 +29,6 @@ public class AddLessonServlet extends HttpServlet {
         String body = req.getParameter("body");
 
 
-
         int courseId = Integer.parseInt(courseIdParam);
 
         Lesson lesson = new Lesson();

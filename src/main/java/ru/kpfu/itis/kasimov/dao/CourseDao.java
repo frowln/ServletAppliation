@@ -31,17 +31,49 @@ public class CourseDao implements Dao<Integer, Course> {
             """;
 
     private static final String FIND_ALL_SQL = """
-            SELECT id, name, description, teacher_id
-            FROM courses
+            SELECT c.id, c.name, c.description, c.teacher_id, 
+                   COALESCE(AVG(r.rating), 0) AS average_rating
+            FROM courses c
+            LEFT JOIN reviews r ON c.id = r.course_id
+            GROUP BY c.id
             """;
 
     public static final String FIND_BY_ID_SQL = FIND_ALL_SQL + """
-            WHERE id = ?
+            HAVING c.id = ?
             """;
 
-    public static final String FIND_BY_TACHER_ID_SQL = FIND_ALL_SQL + """
-            WHERE teacher_id = ?
+    public static final String FIND_BY_TEACHER_ID_SQL = FIND_ALL_SQL + """
+            HAVING c.teacher_id = ?
             """;
+    private static final String FIND_BY_NAME_SQL = """
+                SELECT c.id, c.name, c.description, c.teacher_id, 
+                       COALESCE(AVG(r.rating), 0) AS average_rating
+                FROM courses c
+                LEFT JOIN reviews r ON c.id = r.course_id
+                WHERE c.name ILIKE ?
+                GROUP BY c.id
+            """;
+
+
+    public List<Course> findByName(String query) {
+        try (Connection connection = ConnectionManager.get();
+             PreparedStatement statement = connection.prepareStatement(FIND_BY_NAME_SQL)) {
+            statement.setString(1, "%" + query + "%");
+            List<Course> courses = new ArrayList<>();
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    Course course = buildCourse(resultSet);
+                    courses.add(course);
+                }
+            }
+            return courses;
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+    }
+
+
 
     @Override
     public boolean update(Course course) {
@@ -94,10 +126,13 @@ public class CourseDao implements Dao<Integer, Course> {
     }
 
     private Course buildCourse(ResultSet resultSet) throws SQLException {
-        return new Course(resultSet.getInt("id"),
+        return new Course(
+                resultSet.getInt("id"),
                 resultSet.getString("name"),
                 resultSet.getString("description"),
-                resultSet.getInt("teacher_id"));
+                resultSet.getInt("teacher_id"),
+                resultSet.getDouble("average_rating")
+        );
     }
 
     @Override
@@ -134,7 +169,7 @@ public class CourseDao implements Dao<Integer, Course> {
 
     public List<Course> findByTeacherId(Integer id) {
         try (Connection connection = ConnectionManager.get();
-             PreparedStatement statement = connection.prepareStatement(FIND_BY_TACHER_ID_SQL)) {
+             PreparedStatement statement = connection.prepareStatement(FIND_BY_TEACHER_ID_SQL)) {
             statement.setInt(1, id);
             List<Course> courses = new ArrayList<>();
 
@@ -153,4 +188,3 @@ public class CourseDao implements Dao<Integer, Course> {
     private CourseDao() {
     }
 }
-

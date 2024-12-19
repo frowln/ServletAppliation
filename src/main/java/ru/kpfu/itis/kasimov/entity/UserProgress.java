@@ -7,10 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Course {
-    private int id;
-    private String name;
-    private String description;
-    private int teacherId;
-    private double averageRating;
+public class UserProgress {
+    private int userId;
+    private int courseId;
+    private int completedLessons;
+    private int totalLessons;
 }

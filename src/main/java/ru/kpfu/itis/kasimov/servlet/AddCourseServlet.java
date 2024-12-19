@@ -27,7 +27,7 @@ public class AddCourseServlet extends HttpServlet {
 
         User user = (User) req.getSession().getAttribute("user");
         if (user.getRole().equals("teacher")) {
-            Course course = new Course(0, name, description, user.getId());
+            Course course = new Course(0, name, description, user.getId(), 0.0);
             courseService.createCourse(course);
             resp.sendRedirect("/courses");
         } else {

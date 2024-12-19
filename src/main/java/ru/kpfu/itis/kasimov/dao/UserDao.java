@@ -4,6 +4,7 @@ import ru.kpfu.itis.kasimov.jdbc.ConnectionManager;
 import lombok.Getter;
 import ru.kpfu.itis.kasimov.entity.User;
 import ru.kpfu.itis.kasimov.exception.DaoException;
+import ru.kpfu.itis.kasimov.util.GenerateDefaultIcon;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -15,13 +16,13 @@ public class UserDao implements Dao<Integer, User> {
     private static final UserDao INSTANCE = new UserDao();
 
     private static final String SAVE_SQL = """
-            INSERT INTO users (name, email, password, role) 
-            VALUES (?, ?, ?, ?)
+            INSERT INTO users (name, email, password, role, avatar_url) 
+            VALUES (?, ?, ?, ?, ?)
             """;
 
     private static final String UPDATE_SQL = """
             UPDATE users 
-            SET name = ?, email = ?, password = ?, role = ?
+            SET name = ?, email = ?, password = ?, role = ?, avatar_url = ?
             WHERE id = ?
             """;
 
@@ -31,7 +32,7 @@ public class UserDao implements Dao<Integer, User> {
             """;
 
     private static final String FIND_ALL_SQL = """
-            SELECT id, name, email, password, role
+            SELECT id, name, email, password, role, avatar_url
             FROM users
             """;
 
@@ -51,7 +52,14 @@ public class UserDao implements Dao<Integer, User> {
             statement.setString(2, user.getEmail());
             statement.setString(3, user.getPassword());
             statement.setString(4, user.getRole());
-            statement.setInt(5, user.getId());
+
+            if (user.getAvatarUrl() == null) {
+                statement.setNull(5, Types.VARCHAR);
+            } else {
+                statement.setString(5, user.getAvatarUrl());
+            }
+
+            statement.setInt(6, user.getId());
 
             return statement.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -95,11 +103,14 @@ public class UserDao implements Dao<Integer, User> {
     }
 
     private User buildUser(ResultSet resultSet) throws SQLException {
-        return new User(resultSet.getInt("id"),
+        return new User(
+                resultSet.getInt("id"),
                 resultSet.getString("name"),
                 resultSet.getString("email"),
                 resultSet.getString("password"),
-                resultSet.getString("role"));
+                resultSet.getString("role"),
+                resultSet.getString("avatar_url")
+        );
     }
 
     @Override
@@ -110,6 +121,8 @@ public class UserDao implements Dao<Integer, User> {
             statement.setString(2, user.getEmail());
             statement.setString(3, user.getPassword());
             statement.setString(4, user.getRole());
+            user.setAvatarUrl(GenerateDefaultIcon.generateDefaultIcon(user.getName()));
+            statement.setString(5, user.getAvatarUrl());
 
             statement.executeUpdate();
             try (ResultSet resultSet = statement.getGeneratedKeys()) {
@@ -137,18 +150,18 @@ public class UserDao implements Dao<Integer, User> {
 
     public Optional<User> findByEmail(String email) {
         try (Connection connection = ConnectionManager.get();
-            PreparedStatement statement = connection.prepareStatement(FIND_BY_EMAIL_SQL)) {
+             PreparedStatement statement = connection.prepareStatement(FIND_BY_EMAIL_SQL)) {
             statement.setString(1, email);
 
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                return Optional.of(buildUser(resultSet));
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return Optional.of(buildUser(resultSet));
+                }
             }
             return Optional.empty();
         } catch (SQLException e) {
             throw new DaoException(e);
         }
-
     }
 
     private UserDao() {

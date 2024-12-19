@@ -13,7 +13,7 @@ public class LessonService {
     private static final LessonService INSTANCE = new LessonService();
 
     public List<Lesson> findLessonsByCourseId(Integer courseId) {
-            return lessonDao.findByCourseId(courseId);
+        return lessonDao.findByCourseId(courseId);
     }
 
     public Optional<Lesson> findLessonById(Integer lessonId) {

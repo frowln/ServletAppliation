@@ -21,15 +21,17 @@ public class HomeServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         User user = (User) req.getSession().getAttribute("user");
+
         List<Course> courses = courseService.findAll();
+
         if (user != null) {
             List<Integer> enrolledCourseIds = userCourseService.getEnrolledCourseIdsByUserId(user.getId());
-            System.out.println(enrolledCourseIds);
             req.setAttribute("enrolledCourseIds", enrolledCourseIds);
         }
 
         req.setAttribute("courses", courses);
         req.setAttribute("isTeacher", user != null && "teacher".equals(user.getRole()));
+
         req.getRequestDispatcher("/WEB-INF/views/home.jsp").forward(req, resp);
     }
 }

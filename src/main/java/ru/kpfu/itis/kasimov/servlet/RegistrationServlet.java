@@ -41,7 +41,7 @@ public class RegistrationServlet extends HttpServlet {
             req.getRequestDispatcher("/WEB-INF/views/registration.jsp").forward(req, resp);
             return;
         }
-        User user = new User(0, name, email, password, role);
+        User user = new User(0, name, email, password, role, null);
         user.setName(name);
         user.setEmail(email);
         user.setRole(role);

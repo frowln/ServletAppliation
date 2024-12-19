@@ -4,11 +4,10 @@ import lombok.Getter;
 import ru.kpfu.itis.kasimov.dao.CourseDao;
 import ru.kpfu.itis.kasimov.entity.Course;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class CourseService {
-    private static CourseDao courseDao = CourseDao.getINSTANCE();
+    private static final CourseDao courseDao = CourseDao.getINSTANCE();
     @Getter
     public static final CourseService INSTANCE = new CourseService();
 
@@ -16,9 +15,8 @@ public class CourseService {
         return courseDao.findAll();
     }
 
-    public List<Course> createdCourses(Integer id) {
-        List<Course> createdCourses = courseDao.findByTeacherId(id);
-        return createdCourses;
+    public List<Course> createdCourses(Integer teacherId) {
+        return courseDao.findByTeacherId(teacherId);
     }
 
     public Course createCourse(Course course) {
@@ -37,5 +35,7 @@ public class CourseService {
         return courseDao.update(course);
     }
 
-
+    public List<Course> searchCoursesByName(String query) {
+        return courseDao.findByName(query);
+    }
 }

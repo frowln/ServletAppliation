@@ -8,7 +8,8 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
-@WebFilter({"/addCourse", "/enroll", "/profile", "/courses"}) // URL-ы, где нужна проверка
+@WebFilter({"/addCourse", "/enroll", "/profile", "/courses", "/addLesson", "/addCourse", "/addReview", "/editLesson", "/editCourse"})
+
 public class AuthenticationFilter implements Filter {
 
     @Override

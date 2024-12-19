@@ -138,7 +138,7 @@ public class LessonDao implements Dao<Integer, Lesson> {
 
     public List<Lesson> findByCourseId(Integer courseId) {
         try (Connection connection = ConnectionManager.get();
-            PreparedStatement statement = connection.prepareStatement(FIND_BY_COURSE_ID_SQL)) {
+             PreparedStatement statement = connection.prepareStatement(FIND_BY_COURSE_ID_SQL)) {
             statement.setInt(1, courseId);
 
             List<Lesson> lessons = new ArrayList<>();

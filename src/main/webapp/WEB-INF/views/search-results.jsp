@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chill Study</title>
+    <title>Результаты поиска | Chill Study</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -14,7 +14,7 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
     <div class="container">
-        <a class="navbar-brand" href="#">
+        <a class="navbar-brand" href="/home">
             <i class="fas fa-graduation-cap me-2"></i>
             Chill Study
         </a>
@@ -24,7 +24,7 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto align-items-center">
                 <li class="nav-item">
-                    <a class="nav-link active" href="/home">
+                    <a class="nav-link" href="/home">
                         <i class="fas fa-home me-1"></i> Главная
                     </a>
                 </li>
@@ -80,8 +80,8 @@
 
 <main class="main-content">
     <div class="container py-4">
-        <h2 class="text-center mb-4">Исследуйте курсы</h2>
-        <p class="text-center subtitle mb-5">Найдите курс, который поможет вам достичь ваших целей</p>
+        <h2 class="text-center mb-4">Результаты поиска</h2>
+        <p class="text-center subtitle mb-5">По запросу: "${query}"</p>
 
         <div class="search-bar mb-4">
             <form action="/searchCourses" method="get" class="d-flex">
@@ -93,6 +93,7 @@
                            name="query"
                            class="form-control"
                            placeholder="Поиск курсов..."
+                           value="${query}"
                            required>
                     <button type="submit" class="btn btn-primary">
                         Найти
@@ -101,60 +102,65 @@
             </form>
         </div>
 
-        <c:if test="${user.role == 'teacher'}">
-            <div class="text-end mb-4">
-                <a href="/addCourse" class="btn btn-add-course">
-                    <i class="fas fa-plus me-2"></i>Добавить курс
+        <c:if test="${empty searchResults}">
+            <div class="text-center py-5">
+                <i class="fas fa-search fa-3x text-muted mb-4"></i>
+                <h3 class="text-muted">Курсы не найдены</h3>
+                <p class="text-muted mb-4">Попробуйте изменить параметры поиска</p>
+                <a href="/home" class="btn btn-outline-primary">
+                    <i class="fas fa-home me-2"></i>Вернуться на главную
                 </a>
             </div>
         </c:if>
 
-        <div class="row justify-content-center g-4">
-            <c:forEach var="course" items="${courses}">
-                <div class="col-12 col-md-6 col-lg-4">
-                    <div class="course-card-container">
-                        <a href="/course?id=${course.id}" class="text-decoration-none">
-                            <div class="course-card">
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        <i class="fas fa-book-open me-2"></i>${course.name}
-                                    </h5>
-                                    <p class="card-text">${course.description}</p>
+        <c:if test="${not empty searchResults}">
+            <div class="row justify-content-center g-4">
+                <c:forEach var="course" items="${searchResults}">
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <div class="course-card-container">
+                            <a href="/course?id=${course.id}" class="text-decoration-none">
+                                <div class="course-card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">
+                                            <i class="fas fa-book-open me-2"></i>${course.name}
+                                        </h5>
+                                        <p class="card-text">${course.description}</p>
 
-                                    <div class="rating mb-3">
-                                        <c:forEach var="i" begin="1" end="5">
-                                            <i class="fas fa-star ${i <= course.averageRating ? 'active' : ''}"></i>
-                                        </c:forEach>
-                                        <span class="rating-text">${String.format("%.1f", course.averageRating)}</span>
-                                    </div>
-
-                                    <c:if test="${user.role != 'teacher'}">
-                                        <div class="course-action">
-                                            <c:choose>
-                                                <c:when test="${enrolledCourseIds.contains(course.id)}">
-                                                    <button type="button" class="btn btn-enrolled" disabled>
-                                                        <i class="fas fa-check me-2"></i>Вы записаны
-                                                    </button>
-                                                </c:when>
-                                                <c:otherwise>
-                                                    <form action="/enroll" method="post" class="d-inline">
-                                                        <input type="hidden" name="userId" value="${user.id}">
-                                                        <input type="hidden" name="courseId" value="${course.id}">
-                                                        <button type="submit" class="btn btn-primary">
-                                                            <i class="fas fa-graduation-cap me-2"></i>Записаться
-                                                        </button>
-                                                    </form>
-                                                </c:otherwise>
-                                            </c:choose>
+                                        <div class="rating mb-3">
+                                            <c:forEach var="i" begin="1" end="5">
+                                                <i class="fas fa-star ${i <= course.averageRating ? 'active' : ''}"></i>
+                                            </c:forEach>
+                                            <span class="rating-text">${String.format("%.1f", course.averageRating)}</span>
                                         </div>
-                                    </c:if>
+
+                                        <c:if test="${user.role != 'teacher'}">
+                                            <div class="course-action">
+                                                <c:choose>
+                                                    <c:when test="${enrolledCourseIds.contains(course.id)}">
+                                                        <button type="button" class="btn btn-enrolled" disabled>
+                                                            <i class="fas fa-check me-2"></i>Вы записаны
+                                                        </button>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <form action="/enroll" method="post" class="d-inline">
+                                                            <input type="hidden" name="userId" value="${user.id}">
+                                                            <input type="hidden" name="courseId" value="${course.id}">
+                                                            <button type="submit" class="btn btn-primary">
+                                                                <i class="fas fa-graduation-cap me-2"></i>Записаться
+                                                            </button>
+                                                        </form>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </div>
+                                        </c:if>
+                                    </div>
                                 </div>
-                            </div>
-                        </a>
+                            </a>
+                        </div>
                     </div>
-                </div>
-            </c:forEach>
-        </div>
+                </c:forEach>
+            </div>
+        </c:if>
     </div>
 </main>
 
