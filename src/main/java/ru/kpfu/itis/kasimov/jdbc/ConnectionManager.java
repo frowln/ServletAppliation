@@ -2,55 +2,43 @@ package ru.kpfu.itis.kasimov.jdbc;
 
 import java.io.InputStream;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Properties;
-import javax.sql.DataSource;
-import org.postgresql.ds.PGSimpleDataSource;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class ConnectionManager {
-    private static DataSource dataSource;
 
-    static {
+    public static Connection getConnection() {
+        String PROD_DB_HOST = System.getenv("PROD_DB_HOST");
+        String PROD_DB_PORT = System.getenv("PROD_DB_PORT");
+        String PROD_DB_PASSWORD = System.getenv("PROD_DB_PASSWORD");
+        String PROD_DB_NAME = System.getenv("PROD_DB_NAME");
+        String PROD_DB_USERNAME = System.getenv("PROD_DB_USERNAME");
+
         try {
-            Properties baseProperties = new Properties();
-            try (InputStream baseInput = ConnectionManager.class.getClassLoader().getResourceAsStream("application.properties")) {
-                if (baseInput == null) {
-                    throw new RuntimeException("Base configuration file not found: application.properties");
-                }
-                baseProperties.load(baseInput);
-            }
-
-            String activeProfile = baseProperties.getProperty("active.profile", "dev");
-            String profileFile = "application-" + activeProfile + ".properties";
-
-            Properties profileProperties = new Properties();
-            try (InputStream profileInput = ConnectionManager.class.getClassLoader().getResourceAsStream(profileFile)) {
-                if (profileInput == null) {
-                    throw new RuntimeException("Profile configuration file not found: " + profileFile);
-                }
-                profileProperties.load(profileInput);
-            }
-
-            PGSimpleDataSource ds = new PGSimpleDataSource();
-            String url = profileProperties.getProperty("database.url");
-            String username = profileProperties.getProperty("database.username");
-            String password = profileProperties.getProperty("database.password");
-
-            System.out.println("Using database URL: " + url);
-            System.out.println("Using database Username: " + username);
-            ds.setURL(profileProperties.getProperty("database.url"));
-            ds.setUser(profileProperties.getProperty("database.username"));
-            ds.setPassword(profileProperties.getProperty("database.password"));
-
-            dataSource = ds;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Failed to load database configuration.");
+            Class.forName("org.postgresql.Driver");
+            Connection connection = DriverManager.getConnection(
+                    "jdbc:postgresql://%s:%s/%s".formatted(PROD_DB_HOST, PROD_DB_PORT, PROD_DB_NAME),
+                    PROD_DB_USERNAME,
+                    PROD_DB_PASSWORD
+            );
+            System.out.println("Соединение с базой данных установлено!");
+            return connection;
+        } catch (SQLException | ClassNotFoundException e) {
+            System.err.println("Ошибка подключения к базе данных!");
+            System.err.println("PROD_DB_HOST: " + PROD_DB_HOST);
+            System.err.println("PROD_DB_PORT: " + PROD_DB_PORT);
+            System.err.println("PROD_DB_PASSWORD: " + PROD_DB_PASSWORD);
+            System.err.println("PROD_DB_NAME: " + PROD_DB_NAME);
+            System.err.println("PROD_DB_USERNAME: " + PROD_DB_USERNAME);
+            throw new RuntimeException(e);
         }
     }
 
-    public static Connection getConnection() throws SQLException {
-        return dataSource.getConnection();
+    private ConnectionManager() {
+        // Закрытый конструктор, чтобы предотвратить создание экземпляра класса
     }
 }
