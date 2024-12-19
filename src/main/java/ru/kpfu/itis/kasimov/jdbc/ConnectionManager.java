@@ -32,6 +32,12 @@ public class ConnectionManager {
             }
 
             PGSimpleDataSource ds = new PGSimpleDataSource();
+            String url = profileProperties.getProperty("database.url");
+            String username = profileProperties.getProperty("database.username");
+            String password = profileProperties.getProperty("database.password");
+
+            System.out.println("Using database URL: " + url);
+            System.out.println("Using database Username: " + username);
             ds.setURL(profileProperties.getProperty("database.url"));
             ds.setUser(profileProperties.getProperty("database.username"));
             ds.setPassword(profileProperties.getProperty("database.password"));
