@@ -8,11 +8,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
 public final class ConnectionManager {
-    private static final String URL_KEY = "db.url";
-    private static final String USERNAME_KEY = "db.username";
-    private static final String PASSWORD_KEY = "db.password";
     private static final int DEFAULT_POOL_SIZE = 10;
-    private static final String POOL_SIZE_KEY = "db.pool.size";
     private static BlockingQueue<Connection> pool;
 
     static {
@@ -29,8 +25,7 @@ public final class ConnectionManager {
     }
 
     private static void initConnectionPool() {
-        String poolSize = PropertiesUtil.get(POOL_SIZE_KEY);
-        int size = poolSize == null ? DEFAULT_POOL_SIZE : Integer.parseInt(poolSize);
+        int size = DEFAULT_POOL_SIZE;
         pool = new ArrayBlockingQueue<>(size);
 
         for (int i = 0; i < size; i++) {
@@ -53,16 +48,24 @@ public final class ConnectionManager {
     }
 
     private static Connection open() {
+        String host = System.getenv("PROD_DB_HOST");
+        String port = System.getenv("PROD_DB_PORT");
+        String dbName = System.getenv("PROD_DB_NAME");
+        String username = System.getenv("PROD_DB_USERNAME");
+        String password = System.getenv("PROD_DB_PASSWORD");
+
+        if (host == null || port == null || dbName == null || username == null || password == null) {
+            throw new RuntimeException("One or more required environment variables are missing for database connection");
+        }
+
         try {
-            return DriverManager.getConnection(PropertiesUtil.get(URL_KEY),
-                    PropertiesUtil.get(USERNAME_KEY),
-                    PropertiesUtil.get(PASSWORD_KEY));
+            String url = String.format("jdbc:postgresql://%s:%s/%s", host, port, dbName);
+            return DriverManager.getConnection(url, username, password);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Failed to establish a database connection", e);
         }
     }
 
     private ConnectionManager() {
     }
-
 }
