@@ -8,12 +8,8 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
 public final class ConnectionManager {
-    private static final String URL_KEY = "db.url";
-    private static final String USERNAME_KEY = "db.username";
-    private static final String PASSWORD_KEY = "db.password";
-    private static final int DEFAULT_POOL_SIZE = 10;
-    private static final String POOL_SIZE_KEY = "db.pool.size";
     private static BlockingQueue<Connection> pool;
+    private static final int DEFAULT_POOL_SIZE = 10;
 
     static {
         loadDriver();
@@ -29,17 +25,18 @@ public final class ConnectionManager {
     }
 
     private static void initConnectionPool() {
-        String poolSize = PropertiesUtil.get(POOL_SIZE_KEY);
-        int size = poolSize == null ? DEFAULT_POOL_SIZE : Integer.parseInt(poolSize);
+        int size = DEFAULT_POOL_SIZE;
         pool = new ArrayBlockingQueue<>(size);
 
         for (int i = 0; i < size; i++) {
             Connection connection = open();
-            var proxyConnection = (Connection) Proxy.newProxyInstance(ConnectionManager.class.getClassLoader(),
+            var proxyConnection = (Connection) Proxy.newProxyInstance(
+                    ConnectionManager.class.getClassLoader(),
                     new Class[]{Connection.class},
                     (proxy, method, args) -> method.getName().equals("close") ?
                             pool.add((Connection) proxy) :
-                                method.invoke(connection, args));
+                            method.invoke(connection, args)
+            );
             pool.add(proxyConnection);
         }
     }
@@ -53,16 +50,30 @@ public final class ConnectionManager {
     }
 
     private static Connection open() {
+        String PROD_DB_HOST = System.getenv("PROD_DB_HOST");
+        String PROD_DB_PORT = System.getenv("PROD_DB_PORT");
+        String PROD_DB_PASSWORD = System.getenv("PROD_DB_PASSWORD");
+        String PROD_DB_NAME = System.getenv("PROD_DB_NAME");
+        String PROD_DB_USERNAME = System.getenv("PROD_DB_USERNAME");
+
+        System.out.println("PROD_DB_HOST: " + PROD_DB_HOST);
+        System.out.println("PROD_DB_PORT: " + PROD_DB_PORT);
+        System.out.println("PROD_DB_NAME: " + PROD_DB_NAME);
+        System.out.println("PROD_DB_USERNAME: " + PROD_DB_USERNAME);
+        System.out.println("PROD_DB_PASSWORD: " + PROD_DB_PASSWORD);
+
         try {
-            return DriverManager.getConnection(PropertiesUtil.get(URL_KEY),
-                    PropertiesUtil.get(USERNAME_KEY),
-                    PropertiesUtil.get(PASSWORD_KEY));
+            Connection connection = DriverManager.getConnection(
+                    String.format("jdbc:postgresql://%s:%s/%s", PROD_DB_HOST, PROD_DB_PORT, PROD_DB_NAME),
+                    PROD_DB_USERNAME,
+                    PROD_DB_PASSWORD
+            );
+            return connection;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Failed to establish a connection to the database", e);
         }
     }
 
     private ConnectionManager() {
     }
-
 }
