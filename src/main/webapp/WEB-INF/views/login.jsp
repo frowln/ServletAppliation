@@ -24,7 +24,7 @@
                     </div>
                 </div>
 
-                <h1 class="card-title">Добро пожаловать!</h1>
+                <h1 class="card-title">Доброоо пожаловать!</h1>
                 <p class="subtitle">Войдите в свой аккаунт для продолжения</p>
 
                 <c:if test="${not empty error}">
