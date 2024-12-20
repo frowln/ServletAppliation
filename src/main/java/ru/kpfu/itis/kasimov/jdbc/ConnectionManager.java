@@ -32,7 +32,6 @@ public class ConnectionManager {
                 }
                 profileProperties.load(profileInput);
             }
-
             PGSimpleDataSource ds = new PGSimpleDataSource();
             ds.setURL(profileProperties.getProperty("database.url"));
             ds.setUser(profileProperties.getProperty("database.username"));
