@@ -1,18 +1,13 @@
 package ru.kpfu.itis.kasimov.jdbc;
 
-import java.lang.reflect.Proxy;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
 
 import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.Properties;
 import javax.sql.DataSource;
 import org.postgresql.ds.PGSimpleDataSource;
+
 
 public class ConnectionManager {
     private static DataSource dataSource;
